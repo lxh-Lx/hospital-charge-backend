@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="edu.gdpu.hospitalcharge.mapper.ChargeItemMapper">
+    <resultMap id="BaseResultMap" type="edu.gdpu.hospitalcharge.entity.ChargeItem">
+        <id column="item_id" property="itemId"/>
+        <result column="item_name" property="itemName"/>
+        <result column="item_type" property="itemType"/>
+        <result column="price" property="price"/>
+        <result column="unit" property="unit"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT * FROM charge_item WHERE status = 1 ORDER BY item_id ASC
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        SELECT * FROM charge_item WHERE item_id = #{itemId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="itemId">
+        INSERT INTO charge_item (item_name, item_type, price, unit)
+        VALUES (#{itemName}, #{itemType}, #{price}, #{unit})
+    </insert>
+
+    <update id="update">
+        UPDATE charge_item
+        SET item_name = #{itemName}, item_type = #{itemType}, price = #{price}, unit = #{unit}
+        WHERE item_id = #{itemId}
+    </update>
+
+    <delete id="deleteById">
+        UPDATE charge_item SET status = 0 WHERE item_id = #{itemId}
+    </delete>
+
+    <select id="selectUnpaidByPatientId" resultMap="BaseResultMap">
+        SELECT * FROM charge_item
+        WHERE status = 1
+        ORDER BY RAND()
+    </select>
+</mapper>
